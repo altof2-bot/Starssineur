@@ -12,24 +12,26 @@ invites = {}
 withdraw_requests = []
 admin_id = 5116530698
 
-# Liste des cadeaux disponibles
+# Liste des cadeaux avec leurs prix
 gifts = [
-    {"nom": "💎 100 étoiles", "prix": 100},
-    {"nom": "🎁 200 étoiles", "prix": 200},
-    {"nom": "🎮 Carte PSN", "prix": 500},
-    {"nom": "🧸 Ours en peluche", "prix": 15},
-    {"nom": "🎧 Casque audio", "prix": 25},
-    {"nom": "💻 Ordinateur portable", "prix": 50},
-    {"nom": "📱 Smartphone", "prix": 75},
-    {"nom": "🎮 Console Switch", "prix": 120},
-    {"nom": "🖥️ PC gamer", "prix": 200},
-    {"nom": "🛒 Chèque cadeau Amazon", "prix": 250},
-    {"nom": "🎵 Abonnement Spotify", "prix": 10},
-    {"nom": "🍔 Bon de restaurant", "prix": 30},
-    {"nom": "🎫 Billet de concert", "prix": 40},
-    {"nom": "🎁 Carte cadeau iTunes", "prix": 60},
-    {"nom": "🌟 Récompense surprise", "prix": 150},
+    {"nom": "💎 100 étoiles", "prix": 100, "callback": "buy_100"},
+    {"nom": "🎁 200 étoiles", "prix": 200, "callback": "buy_200"},
+    {"nom": "🎮 Carte PSN", "prix": 500, "callback": "buy_psn"},
+    {"nom": "🧸 Ours en peluche", "prix": 15, "callback": "buy_ours"},
+    {"nom": "🎧 Casque audio", "prix": 25, "callback": "buy_casque"},
+    {"nom": "💻 Ordinateur portable", "prix": 50, "callback": "buy_pc"},
+    {"nom": "📱 Smartphone", "prix": 75, "callback": "buy_phone"},
+    {"nom": "🎮 Console Switch", "prix": 120, "callback": "buy_switch"},
+    {"nom": "🖥️ PC gamer", "prix": 200, "callback": "buy_pc_gamer"},
+    {"nom": "🛒 Chèque cadeau Amazon", "prix": 250, "callback": "buy_amazon"},
+    {"nom": "🎵 Abonnement Spotify", "prix": 10, "callback": "buy_spotify"},
+    {"nom": "🍔 Bon de restaurant", "prix": 30, "callback": "buy_restaurant"},
+    {"nom": "🎫 Billet de concert", "prix": 40, "callback": "buy_concert"},
+    {"nom": "🎁 Carte cadeau iTunes", "prix": 60, "callback": "buy_itunes"},
+    {"nom": "🌟 Récompense surprise", "prix": 150, "callback": "buy_surprise"},
 ]
+
+
 
 # Fonction pour récupérer le nombre total d’utilisateurs
 def total_users():
@@ -93,32 +95,45 @@ def invite(call):
     num_invites = len(invites.get(user_id, []))
     bot.send_message(user_id, f"🔗 Voici votre lien d'invitation:\n{invite_link}\n\nVous avez invité {num_invites} personnes. Continuez à inviter pour gagner plus d'étoiles !")
 
-# Callback pour afficher les cadeaux disponibles dans la boutique
+# ➜ Afficher la boutique avec des boutons
 @bot.callback_query_handler(func=lambda call: call.data == "shop")
 def shop(call):
     user_id = call.message.chat.id
-    stars = users.get(user_id, 0)
-    message = "🎁 Voici les cadeaux disponibles :\n\n"
+    markup = InlineKeyboardMarkup()
+
     for gift in gifts:
-        message += f"{gift['nom']} - {gift['prix']} étoiles\n"
+        markup.add(InlineKeyboardButton(f"{gift['nom']} - {gift['prix']}⭐", callback_data=gift["callback"]))
 
-    message += "\nChoisissez un cadeau en envoyant son nom."
-    bot.send_message(user_id, message)
+    bot.send_message(user_id, "🎁 Voici les cadeaux disponibles :", reply_markup=markup)
 
-# Callback pour acheter un cadeau
-@bot.message_handler(func=lambda message: any(gift['nom'] == message.text for gift in gifts))
-def buy_gift(message):
-    user_id = message.chat.id
-    gift_name = message.text
-    gift = next(gift for gift in gifts if gift['nom'] == gift_name)
-    price = gift['prix']
+# ➜ Confirmation d'achat avec boutons
+@bot.callback_query_handler(func=lambda call: call.data.startswith("buy_"))
+def confirm_purchase(call):
+    user_id = call.message.chat.id
+    gift = next(g for g in gifts if g["callback"] == call.data)
 
-    # Vérifie si l'utilisateur a suffisamment d'étoiles
-    if users.get(user_id, 0) >= price:
-        users[user_id] -= price
-        bot.send_message(user_id, f"Félicitations ! Vous avez acheté un {gift_name} pour {price} étoiles.")
+    markup = InlineKeyboardMarkup()
+    markup.add(
+        InlineKeyboardButton("✅ Confirmer", callback_data=f"confirm_{gift['callback']}"),
+        InlineKeyboardButton("❌ Annuler", callback_data="shop")
+    )
+
+    bot.send_message(user_id, f"Voulez-vous acheter {gift['nom']} pour {gift['prix']} étoiles ?", reply_markup=markup)
+
+# ➜ Achat final après confirmation
+@bot.callback_query_handler(func=lambda call: call.data.startswith("confirm_"))
+def buy_gift(call):
+    user_id = call.message.chat.id
+    gift_callback = call.data.split("_")[1]
+    gift = next(g for g in gifts if g["callback"] == gift_callback)
+
+    if users.get(user_id, 0) >= gift["prix"]:
+        users[user_id] -= gift["prix"]
+        bot.send_message(user_id, f"🎉 Félicitations ! Vous avez acheté {gift['nom']} pour {gift['prix']} étoiles.")
     else:
-        bot.send_message(user_id, "Désolé, vous n'avez pas assez d'étoiles pour acheter ce cadeau.")
+        bot.send_message(user_id, "❌ Pas assez d'étoiles !")
+
+
 
 # Callback pour demander un retrait
 @bot.callback_query_handler(func=lambda call: call.data == "withdraw")
