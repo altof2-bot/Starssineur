@@ -21,8 +21,8 @@ def start_bot():
 
 if __name__ == "__main__":
     # Démarrer le bot Telegram dans un thread séparé
-    threading.Thread(target=start_bot).start()
+    threading.Thread(target=start_bot, daemon=True).start()  # Utilisation de daemon=True pour éviter de bloquer la fermeture du programme
 
     # Lancer le serveur Flask pour Koyeb
     port = int(os.environ.get("PORT", 8000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=port, threaded=True)  # Assurez-vous que Flask gère les requêtes en mode multithreadé
