@@ -89,8 +89,9 @@ def show_balance(call):
 @bot.callback_query_handler(func=lambda call: call.data == "invite")
 def invite(call):
     user_id = call.message.chat.id
-    invites[user_id] += 1
-    bot.send_message(user_id, f"Vous avez invité {invites[user_id]} personnes. Continuez à inviter pour gagner plus d'étoiles !")
+    invite_link = f"https://t.me/NOM_DU_BOT?start={user_id}"
+    num_invites = len(invites.get(user_id, []))
+    bot.send_message(user_id, f"🔗 Voici votre lien d'invitation:\n{invite_link}\n\nVous avez invité {num_invites} personnes. Continuez à inviter pour gagner plus d'étoiles !")
 
 # Callback pour afficher les cadeaux disponibles dans la boutique
 @bot.callback_query_handler(func=lambda call: call.data == "shop")
