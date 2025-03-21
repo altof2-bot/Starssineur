@@ -41,6 +41,7 @@ def start(message):
     user_id = message.chat.id
     
     # Si l'utilisateur a été invité par un lien
+    text = message.text.split()
     if len(text) > 1 and text[1].isdigit():
         inviter_id = int(text[1])
 
