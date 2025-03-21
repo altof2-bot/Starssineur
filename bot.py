@@ -124,7 +124,7 @@ def confirm_purchase(call):
 @bot.callback_query_handler(func=lambda call: call.data.startswith("confirm_"))
 def buy_gift(call):
     user_id = call.message.chat.id
-    gift_callback = call.data.split("_")[1]
+    gift_callback = "_".join(call.data.split("_")[1:])  # Get everything after "confirm_"
     gift = next(g for g in gifts if g["callback"] == gift_callback)
 
     if users.get(user_id, 0) >= gift["prix"]:
