@@ -12,7 +12,7 @@ requiredFiles = [".replit", "replit.nix"]
 
 [deployment]
 run = ["python3", "main.py"]
-deploymentTarget = "cloudrun"
+deploymentTarget = "cloudrun"  # Tu peux également ajuster cela en fonction de ta cible exacte sur Koyeb
 
 [workflows]
 runButton = "Run"
@@ -25,3 +25,8 @@ mode = "sequential"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "python main.py"
+
+# Ajout pour Koyeb, en cas de besoin pour ajuster le workflow
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python3 deploy_koyeb.py"  # Exemple pour un script de déploiement spécifique si nécessaire
