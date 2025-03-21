@@ -269,12 +269,11 @@ def process_add_balance(message):
             return
             
         user_id, stars_to_add = map(int, parts)
-        if user_id in users:
-            users[user_id] += stars_to_add
-            bot.send_message(admin_id, f"✅ {stars_to_add} étoiles ont été ajoutées à l'utilisateur {user_id}.")
-            bot.send_message(user_id, f"🎉 Vous avez reçu {stars_to_add} étoiles supplémentaires !")
-        else:
-            bot.send_message(admin_id, "❌ Utilisateur non trouvé.")
+        if user_id not in users:
+            users[user_id] = 0
+        users[user_id] += stars_to_add
+        bot.send_message(admin_id, f"✅ {stars_to_add} étoiles ont été ajoutées à l'utilisateur {user_id}.")
+        bot.send_message(user_id, f"🎉 Vous avez reçu {stars_to_add} étoiles supplémentaires !")
     except ValueError:
         bot.send_message(admin_id, "❌ Format incorrect. Utilisez: [ID_UTILISATEUR] [NOMBRE_ETOILES]")
 
