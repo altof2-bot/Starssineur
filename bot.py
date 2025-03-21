@@ -176,7 +176,7 @@ def admin_panel(message):
     btn_broadcast = InlineKeyboardButton("📢 Diffuser un message", callback_data="broadcast")
     btn_withdraws = InlineKeyboardButton("💸 Gérer les retraits", callback_data="manage_withdraws")
     btn_add_balance = InlineKeyboardButton("➕ Ajouter des étoiles à un utilisateur", callback_data="add_balance")
-    markup.add(InlineKeyboardButton("⚙️ Modifier récompense", callback_data="change_reward")
+    markup.add(InlineKeyboardButton("⚙️ Modifier récompense", callback_data="change_reward"))
     btn_status = InlineKeyboardButton("📊 Statut des utilisateurs", callback_data="status")
     markup.add(btn_broadcast, btn_withdraws)
     markup.add(btn_add_balance, btn_status)
