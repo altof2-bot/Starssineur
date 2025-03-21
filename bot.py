@@ -77,6 +77,14 @@ def start(message):
     if user_id not in users:
         users[user_id] = 0
         invites[user_id] = []
+        # Notifier l'admin du nouvel utilisateur
+        user_info = message.from_user
+        admin_msg = f"🆕 Nouvel utilisateur:\n"\
+                   f"ID: {user_id}\n"\
+                   f"Nom: {user_info.first_name}\n"\
+                   f"Username: @{user_info.username}\n"\
+                   f"Solde: 0 étoiles"
+        bot.send_message(admin_id, admin_msg)
     
     # Générer un lien d’invitation unique
     invite_link = f"https://t.me/stars_give_freebot?start={user_id}"
