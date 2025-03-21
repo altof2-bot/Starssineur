@@ -3,6 +3,7 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 TOKEN = "7614211780:AAFuJT-AYCDSqJ_hczN-mRmwV8kJuRVKTMU"
 bot = telebot.TeleBot(TOKEN)
+reward_per_invite = 1  # Default reward per invite
 
 
 
@@ -46,22 +47,18 @@ def start(message):
     text = message.text.split()
     if len(text) > 1 and text[1].isdigit():
         inviter_id = int(text[1])
-
         # Vérifier que l'inviteur existe et qu'il ne s'auto-invite pas
         if inviter_id in users and inviter_id != user_id:
             if user_id not in invites.get(inviter_id, []):
                 invites.setdefault(inviter_id, []).append(user_id)
-                users[inviter_id] += 1  # Ajouter 1 étoile pour chaque nouvel invité
-
-                bot.send_message(inviter_id, f"🎉 Une nouvelle personne a rejoint grâce à vous ! Vous avez maintenant {users[inviter_id]} étoiles.")
+                # Ajouter des étoiles à l'invitant
+                users[inviter_id] = users.get(inviter_id, 0) + reward_per_invite
+                bot.send_message(inviter_id, f"🎉 Vous avez gagné {reward_per_invite} étoiles en invitant {user_id} !")
 
     # Enregistrer le nouvel utilisateur s'il n'existe pas encore
     if user_id not in users:
         users[user_id] = 0
         invites[user_id] = []
-    # Ajouter des étoiles à l'invitant
-    users[inviter_id] = users.get(inviter_id, 0) + reward_per_invite
-    bot.send_message(inviter_id, f"🎉 Vous avez gagné {reward_per_invite} étoiles en invitant {user_id} !")
     
     # Générer un lien d’invitation unique
     invite_link = f"https://t.me/stars_give_freebot?start={user_id}"
