@@ -42,6 +42,20 @@ def total_users():
 @bot.message_handler(commands=['start'])
 def start(message):
     user_id = message.chat.id
+    
+    # Vérifier l'abonnement au canal
+    try:
+        member = bot.get_chat_member("@sineur_x_bot", user_id)
+        if member.status in ["left", "kicked"]:
+            markup = InlineKeyboardMarkup()
+            markup.add(InlineKeyboardButton("📢 Rejoindre le canal", url="https://t.me/sineur_x_bot"))
+            bot.send_message(user_id, "⚠️ Vous devez être abonné à notre canal pour utiliser le bot !\n\nAbonnez-vous et réessayez /start", reply_markup=markup)
+            return
+    except:
+        markup = InlineKeyboardMarkup()
+        markup.add(InlineKeyboardButton("📢 Rejoindre le canal", url="https://t.me/sineur_x_bot"))
+        bot.send_message(user_id, "⚠️ Vous devez être abonné à notre canal pour utiliser le bot !\n\nAbonnez-vous et réessayez /start", reply_markup=markup)
+        return
 
     # Si l'utilisateur a été invité par un lien
     text = message.text.split()
