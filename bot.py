@@ -236,13 +236,21 @@ def add_balance(call):
     bot.register_next_step_handler(msg, process_add_balance)
 
 def process_add_balance(message):
-    user_id, stars_to_add = map(int, message.text.split())
-    if user_id in users:
-        users[user_id] += stars_to_add
-        bot.send_message(admin_id, f"✅ {stars_to_add} étoiles ont été ajoutées à l'utilisateur {user_id}.")
-        bot.send_message(user_id, f"🎉 Vous avez reçu {stars_to_add} étoiles supplémentaires !")
-    else:
-        bot.send_message(admin_id, "❌ Utilisateur non trouvé.")
+    try:
+        parts = message.text.split()
+        if len(parts) != 2:
+            bot.send_message(admin_id, "❌ Format incorrect. Utilisez: [ID_UTILISATEUR] [NOMBRE_ETOILES]")
+            return
+            
+        user_id, stars_to_add = map(int, parts)
+        if user_id in users:
+            users[user_id] += stars_to_add
+            bot.send_message(admin_id, f"✅ {stars_to_add} étoiles ont été ajoutées à l'utilisateur {user_id}.")
+            bot.send_message(user_id, f"🎉 Vous avez reçu {stars_to_add} étoiles supplémentaires !")
+        else:
+            bot.send_message(admin_id, "❌ Utilisateur non trouvé.")
+    except ValueError:
+        bot.send_message(admin_id, "❌ Format incorrect. Utilisez: [ID_UTILISATEUR] [NOMBRE_ETOILES]")
 
 # ➜ Modifier la récompense par invitation (Admin uniquement)
 @bot.callback_query_handler(func=lambda call: call.data == "change_reward")
