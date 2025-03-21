@@ -45,15 +45,19 @@ def start(message):
     
     # Vérifier l'abonnement au canal
     try:
-        member = bot.get_chat_member("@sineur_x_bot", user_id)
-        if member.status in ["left", "kicked"]:
+        channel_username = "@sineur_x_bot"
+        member = bot.get_chat_member(chat_id=channel_username, user_id=user_id)
+        if member.status in ["left", "kicked", "restricted"]:
             markup = InlineKeyboardMarkup()
-            markup.add(InlineKeyboardButton("📢 Rejoindre le canal", url="https://t.me/sineur_x_bot"))
+            markup.add(InlineKeyboardButton("📢 Rejoindre le canal", url=f"https://t.me/{channel_username.replace('@', '')}"))
             bot.send_message(user_id, "⚠️ Vous devez être abonné à notre canal pour utiliser le bot !\n\nAbonnez-vous et réessayez /start", reply_markup=markup)
             return
-    except:
+    except telebot.apihelper.ApiTelegramException as e:
+        if "Bad Request: chat not found" in str(e):
+            # Le canal n'existe pas ou le bot n'y a pas accès
+            bot.send_message(admin_id, f"⚠️ Erreur avec le canal {channel_username}: Canal non trouvé ou bot non admin")
         markup = InlineKeyboardMarkup()
-        markup.add(InlineKeyboardButton("📢 Rejoindre le canal", url="https://t.me/sineur_x_bot"))
+        markup.add(InlineKeyboardButton("📢 Rejoindre le canal", url=f"https://t.me/{channel_username.replace('@', '')}"))
         bot.send_message(user_id, "⚠️ Vous devez être abonné à notre canal pour utiliser le bot !\n\nAbonnez-vous et réessayez /start", reply_markup=markup)
         return
 
