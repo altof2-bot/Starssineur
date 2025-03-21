@@ -41,7 +41,7 @@ def total_users():
 @bot.message_handler(commands=['start'])
 def start(message):
     user_id = message.chat.id
-    
+
     # Si l'utilisateur a été invité par un lien
     text = message.text.split()
     if len(text) > 1 and text[1].isdigit():
@@ -65,7 +65,7 @@ def start(message):
 
 
 
-  
+
 
     markup = InlineKeyboardMarkup()
     btn_balance = InlineKeyboardButton("💰 Mon solde", callback_data="balance")
@@ -76,18 +76,13 @@ def start(message):
     markup.add(btn_balance, btn_invite)
     markup.add(btn_shop, btn_withdraw, btn_my_invites)
 
-    bot.send_message(user_id, " 🎉 Bienvenue sur notre bot ! 🌟
-
-Notre bot est conçu pour vous offrir des étoiles ⭐ en échange d’invitations. Voici comment ça marche :
-
-👥 Invitez 50 personnes = 🎁 10 étoiles
-🛍️ Utilisez vos étoiles dans la boutique pour obtenir des récompenses !
-
-💡 Vérifiez vos étoiles et explorez les cadeaux disponibles dans la boutique.
-
-⚠️ Un problème avec vos étoiles ? Si vous n’avez pas reçu vos étoiles ou si une erreur s’est produite, déposez une plainte ici : 👉 @altof2
-
-Profitez bien et commencez à inviter vos amis ! 🚀Choisissez une option pour commencer.", reply_markup=markup)
+    bot.send_message(user_id, "🎉 Bienvenue sur notre bot ! 🌟\n\n"
+                           "Notre bot est conçu pour vous offrir des étoiles ⭐ en échange d'invitations. Voici comment ça marche :\n\n"
+                           "👥 Invitez 50 personnes = 🎁 10 étoiles\n"
+                           "🛍️ Utilisez vos étoiles dans la boutique pour obtenir des récompenses !\n\n"
+                           "💡 Vérifiez vos étoiles et explorez les cadeaux disponibles dans la boutique.\n\n"
+                           "⚠️ Un problème avec vos étoiles ? Si vous n'avez pas reçu vos étoiles ou si une erreur s'est produite, déposez une plainte ici : 👉 @altof2\n\n"
+                           "Profitez bien et commencez à inviter vos amis ! 🚀 Choisissez une option pour commencer.", reply_markup=markup)
 
 
 
