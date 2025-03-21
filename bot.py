@@ -16,18 +16,18 @@ admin_id = 5116530698
 gifts = [
     {"nom": "💎 100 étoiles", "prix": 100, "callback": "buy_100"},
     {"nom": "🎁 200 étoiles", "prix": 200, "callback": "buy_200"},
-    {"nom": "🎮 Carte PSN", "prix": 500, "callback": "buy_psn"},
-    {"nom": "🧸 Ours en peluche", "prix": 15, "callback": "buy_ours"},
-    {"nom": "🎧 Casque audio", "prix": 25, "callback": "buy_casque"},
-    {"nom": "💻 Ordinateur portable", "prix": 50, "callback": "buy_pc"},
-    {"nom": "📱 Smartphone", "prix": 75, "callback": "buy_phone"},
-    {"nom": "🎮 Console Switch", "prix": 120, "callback": "buy_switch"},
-    {"nom": "🖥️ PC gamer", "prix": 200, "callback": "buy_pc_gamer"},
-    {"nom": "🛒 Chèque cadeau Amazon", "prix": 250, "callback": "buy_amazon"},
-    {"nom": "🎵 Abonnement Spotify", "prix": 10, "callback": "buy_spotify"},
-    {"nom": "🍔 Bon de restaurant", "prix": 30, "callback": "buy_restaurant"},
-    {"nom": "🎫 Billet de concert", "prix": 40, "callback": "buy_concert"},
-    {"nom": "🎁 Carte cadeau iTunes", "prix": 60, "callback": "buy_itunes"},
+    {"nom": "🚀 500 etoile ", "prix": 500, "callback": "buy_psn"},
+    {"nom": "🧸 15 etoile", "prix": 15, "callback": "buy_ours"},
+    {"nom": "🎧 25 etoile", "prix": 25, "callback": "buy_casque"},
+    {"nom": "🏝️ 50 etoile", "prix": 50, "callback": "buy_pc"},
+    {"nom": "📱 75 etoile", "prix": 75, "callback": "buy_phone"},
+    {"nom": "🎮 120 etoile", "prix": 120, "callback": "buy_switch"},
+    {"nom": "🖥️ 200 etoile", "prix": 200, "callback": "buy_pc_gamer"},
+    {"nom": "🛒 250 etoile", "prix": 250, "callback": "buy_amazon"},
+    {"nom": "🎵 10 etoile", "prix": 10, "callback": "buy_spotify"},
+    {"nom": "🍔 30 etoile ", "prix": 30, "callback": "buy_restaurant"},
+    {"nom": "🎫 40 etoile", "prix": 40, "callback": "buy_concert"},
+    {"nom": "🎁 Carte cadeau premuim", "prix": 460, "callback": "buy_itunes"},
     {"nom": "🌟 Récompense surprise", "prix": 150, "callback": "buy_surprise"},
 ]
 
@@ -61,7 +61,7 @@ def start(message):
         invites[user_id] = []
 
     # Générer un lien d’invitation unique
-    invite_link = f"https://t.me/NOM_DU_BOT?start={user_id}"
+    invite_link = f"https://t.me/stars_give_freebot?start={user_id}"
 
 
 
@@ -76,7 +76,18 @@ def start(message):
     markup.add(btn_balance, btn_invite)
     markup.add(btn_shop, btn_withdraw, btn_my_invites)
 
-    bot.send_message(user_id, "⭐ Bienvenue ! Choisissez une option pour commencer.", reply_markup=markup)
+    bot.send_message(user_id, " 🎉 Bienvenue sur notre bot ! 🌟
+
+Notre bot est conçu pour vous offrir des étoiles ⭐ en échange d’invitations. Voici comment ça marche :
+
+👥 Invitez 50 personnes = 🎁 10 étoiles
+🛍️ Utilisez vos étoiles dans la boutique pour obtenir des récompenses !
+
+💡 Vérifiez vos étoiles et explorez les cadeaux disponibles dans la boutique.
+
+⚠️ Un problème avec vos étoiles ? Si vous n’avez pas reçu vos étoiles ou si une erreur s’est produite, déposez une plainte ici : 👉 @altof2
+
+Profitez bien et commencez à inviter vos amis ! 🚀Choisissez une option pour commencer.", reply_markup=markup)
 
 
 
@@ -91,7 +102,7 @@ def show_balance(call):
 @bot.callback_query_handler(func=lambda call: call.data == "invite")
 def invite(call):
     user_id = call.message.chat.id
-    invite_link = f"https://t.me/NOM_DU_BOT?start={user_id}"
+    invite_link = f"https://t.me/stars_give_freebot?start={user_id}"
     num_invites = len(invites.get(user_id, []))
     bot.send_message(user_id, f"🔗 Voici votre lien d'invitation:\n{invite_link}\n\nVous avez invité {num_invites} personnes. Continuez à inviter pour gagner plus d'étoiles !")
 
