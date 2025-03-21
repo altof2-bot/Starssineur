@@ -193,10 +193,13 @@ def show_balance(call):
 def withdraw(call):
     user_id = call.message.chat.id
     stars = users.get(user_id, 0)
-    if stars > 0:
-        bot.send_message(user_id, f"💳 Votre demande de retrait de {stars} étoiles a été enregistrée.")
+    minimum_stars = 15
+    
+    if stars >= minimum_stars:
+        bot.send_message(user_id, f"💳 Votre demande de retrait de {stars} étoiles a été enregistrée.\nLe retrait est en cours de traitement.")
     else:
-        bot.send_message(user_id, "Votre solde est insuffisant pour effectuer un retrait.")
+        manquant = minimum_stars - stars
+        bot.send_message(user_id, f"⚠️ Le retrait minimum est de {minimum_stars} étoiles.\nIl vous manque {manquant} étoiles pour pouvoir faire un retrait.")
 
 
 # Callback pour afficher les invitations de l'utilisateur
