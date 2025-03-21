@@ -1,9 +1,16 @@
-
 import os
 import time
+import threading
+from flask import Flask
 from bot import bot
 
-def main():
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Bot is running!"
+
+def start_bot():
     while True:
         try:
             print("🤖 Bot Telegram démarré...")
@@ -11,8 +18,11 @@ def main():
         except Exception as e:
             print(f"⚠️ Erreur: {e}")
             time.sleep(3)
-            continue
 
 if __name__ == "__main__":
+    # Démarrer le bot Telegram dans un thread séparé
+    threading.Thread(target=start_bot).start()
+
+    # Lancer le serveur Flask pour Koyeb
     port = int(os.environ.get("PORT", 8000))
-    main()
+    app.run(host="0.0.0.0", port=port)
