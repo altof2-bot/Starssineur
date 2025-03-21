@@ -289,14 +289,14 @@ def change_reward(call):
 def update_reward(message):
     global reward_per_invite
     try:
-        new_reward = int(message.text)
+        new_reward = float(message.text)
         if new_reward > 0:
             reward_per_invite = new_reward
             bot.send_message(admin_id, f"✅ La récompense par invitation est maintenant de {reward_per_invite} étoiles !")
         else:
-            bot.send_message(admin_id, "❌ Veuillez entrer un nombre valide.")
+            bot.send_message(admin_id, "❌ La récompense doit être supérieure à 0.")
     except ValueError:
-        bot.send_message(admin_id, "❌ Veuillez entrer un nombre valide.")
+        bot.send_message(admin_id, "❌ Veuillez entrer un nombre valide (ex: 0.5, 1.5, 2).")
 # Statut des utilisateurs
 @bot.callback_query_handler(func=lambda call: call.data == "status")
 def status(call):
