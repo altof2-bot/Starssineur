@@ -176,7 +176,7 @@ def buy_gift(call):
 def withdraw(call):
     user_id = call.message.chat.id
     stars = users.get(user_id, 0)
-    bot.send_message(user_id, f"Vous avez demandé un retrait de {stars} étoiles. Cette demande est en cours.")
+    bot.send_message(user_id, f"💰 Votre solde actuel est de {stars} étoiles.")
 
 # Callback pour afficher les invitations de l'utilisateur
 @bot.callback_query_handler(func=lambda call: call.data == "my_invites")
