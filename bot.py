@@ -59,11 +59,16 @@ def start(message):
     if user_id not in users:
         users[user_id] = 0
         invites[user_id] = []
-
+    # Ajouter des étoiles à l'invitant
+    users[inviter_id] = users.get(inviter_id, 0) + reward_per_invite
+    bot.send_message(inviter_id, f"🎉 Vous avez gagné {reward_per_invite} étoiles en invitant {user_id} !")
+    
     # Générer un lien d’invitation unique
     invite_link = f"https://t.me/stars_give_freebot?start={user_id}"
 
-
+    # Ajouter le nouvel utilisateur s'il n'existe pas
+    if user_id not in users:
+        users[user_id] = 0
 
 
 
@@ -86,12 +91,14 @@ def start(message):
 
 
 
-# Callback pour afficher le solde de l'utilisateur
-@bot.callback_query_handler(func=lambda call: call.data == "balance")
-def show_balance(call):
+# ➜ Générer un lien d'invitation
+@bot.callback_query_handler(func=lambda call: call.data == "invite")
+def invite(call):
     user_id = call.message.chat.id
-    stars = users.get(user_id, 0)
-    bot.send_message(user_id, f"Vous avez {stars} étoiles.")
+    invite_link = f"https://t.me/{bot.get_me().username}?start={user_id}"
+
+    bot.send_message(user_id, f"📢 Invite tes amis avec ce lien :\n{invite_link}\n\nChaque invitation te rapporte {reward_per_invite} étoiles !")
+
 
 # Callback pour inviter des amis
 @bot.callback_query_handler(func=lambda call: call.data == "invite")
@@ -169,6 +176,7 @@ def admin_panel(message):
     btn_broadcast = InlineKeyboardButton("📢 Diffuser un message", callback_data="broadcast")
     btn_withdraws = InlineKeyboardButton("💸 Gérer les retraits", callback_data="manage_withdraws")
     btn_add_balance = InlineKeyboardButton("➕ Ajouter des étoiles à un utilisateur", callback_data="add_balance")
+    markup.add(InlineKeyboardButton("⚙️ Modifier récompense", callback_data="change_reward")
     btn_status = InlineKeyboardButton("📊 Statut des utilisateurs", callback_data="status")
     markup.add(btn_broadcast, btn_withdraws)
     markup.add(btn_add_balance, btn_status)
@@ -239,7 +247,25 @@ def process_add_balance(message):
     else:
         bot.send_message(admin_id, "❌ Utilisateur non trouvé.")
 
+# ➜ Modifier la récompense par invitation (Admin uniquement)
+@bot.callback_query_handler(func=lambda call: call.data == "change_reward")
+def change_reward(call):
+    if call.message.chat.id != admin_id:
+        return
+    msg = bot.send_message(admin_id, "🖊️ Entrez le nouveau nombre d'étoiles par invitation :")
+    bot.register_next_step_handler(msg, update_reward)
 
+def update_reward(message):
+    global reward_per_invite
+    try:
+        new_reward = int(message.text)
+        if new_reward > 0:
+            reward_per_invite = new_reward
+            bot.send_message(admin_id, f"✅ La récompense par invitation est maintenant de {reward_per_invite} étoiles !")
+        else:
+            bot.send_message(admin_id, "❌ Veuillez entrer un nombre valide.")
+    except ValueError:
+        bot.send_message(admin_id, "❌ Veuillez entrer un nombre valide.")
 # Statut des utilisateurs
 @bot.callback_query_handler(func=lambda call: call.data == "status")
 def status(call):
