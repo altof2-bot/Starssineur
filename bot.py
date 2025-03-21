@@ -101,7 +101,7 @@ def start(message):
                            "👥 Invitez 50 personnes = 🎁 10 étoiles\n"
                            "🛍️ Utilisez vos étoiles dans la boutique pour obtenir des récompenses !\n\n"
                            "💡 Vérifiez vos étoiles et explorez les cadeaux disponibles dans la boutique.\n\n"
-                           "⚠️ Un problème avec vos étoiles ? Si vous n'avez pas reçu vos étoiles ou si une erreur s'est produite, déposez une plainte ici : 👉 @altof2\n\n"
+                           "⚠️ Un problème avec vos étoiles ? Si vous n'avez pas reçu vos étoiles ou si une erreur s'est produite, déposez une plainte ici : 👉 @altof2 notre canal @sineur_x_bot \n\n"
                            "Profitez bien et commencez à inviter vos amis ! 🚀 Choisissez une option pour commencer.", reply_markup=markup)
 
 
