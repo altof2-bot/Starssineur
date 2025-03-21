@@ -42,7 +42,7 @@ def total_users():
 @bot.message_handler(commands=['start'])
 def start(message):
     user_id = message.chat.id
-    
+
     # Vérifier l'abonnement au canal
     try:
         channel_username = "@sineur_x_bot"
@@ -85,7 +85,7 @@ def start(message):
                    f"Username: @{user_info.username}\n"\
                    f"Solde: 0 étoiles"
         bot.send_message(admin_id, admin_msg)
-    
+
     # Générer un lien d’invitation unique
     invite_link = f"https://t.me/stars_give_freebot?start={user_id}"
 
@@ -171,12 +171,23 @@ def buy_gift(call):
 
 
 
+# Callback pour afficher le solde
+@bot.callback_query_handler(func=lambda call: call.data == "balance")
+def show_balance(call):
+    user_id = call.message.chat.id
+    stars = users.get(user_id, 0)
+    bot.send_message(user_id, f"💰 Votre solde actuel est de {stars} étoiles !")
+
 # Callback pour demander un retrait
 @bot.callback_query_handler(func=lambda call: call.data == "withdraw")
 def withdraw(call):
     user_id = call.message.chat.id
     stars = users.get(user_id, 0)
-    bot.send_message(user_id, f"💰 Votre solde actuel est de {stars} étoiles.")
+    if stars > 0:
+        bot.send_message(user_id, f"💳 Votre demande de retrait de {stars} étoiles a été enregistrée.")
+    else:
+        bot.send_message(user_id, "Votre solde est insuffisant pour effectuer un retrait.")
+
 
 # Callback pour afficher les invitations de l'utilisateur
 @bot.callback_query_handler(func=lambda call: call.data == "my_invites")
@@ -267,7 +278,7 @@ def process_add_balance(message):
         if len(parts) != 2:
             bot.send_message(admin_id, "❌ Format incorrect. Utilisez: [ID_UTILISATEUR] [NOMBRE_ETOILES]")
             return
-            
+
         user_id, stars_to_add = map(int, parts)
         if user_id not in users:
             users[user_id] = 0
