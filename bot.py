@@ -175,8 +175,18 @@ def buy_gift(call):
 @bot.callback_query_handler(func=lambda call: call.data == "balance")
 def show_balance(call):
     user_id = call.message.chat.id
+    user_info = call.from_user
     stars = users.get(user_id, 0)
-    bot.send_message(user_id, f"💰 Votre solde actuel est de {stars} étoiles !")
+    
+    profile_msg = (
+        f"👤 Profil utilisateur:\n"
+        f"🆔 ID: {user_id}\n"
+        f"📝 Nom: {user_info.first_name}\n"
+        f"👤 Username: @{user_info.username}\n"
+        f"💰 Solde: {stars} étoiles"
+    )
+    
+    bot.send_message(user_id, profile_msg)
 
 # Callback pour demander un retrait
 @bot.callback_query_handler(func=lambda call: call.data == "withdraw")
