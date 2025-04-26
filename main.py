@@ -2,7 +2,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, MessageHandler, ChatJoinRequestHandler, filters
 from keep_alive import keep_alive
 
-TOKEN = "7703043943:AAGTU2j5IiEJ6Z2Z5RkvRZTU59TNygIqeTo"
+TOKEN = "7703043943:AAHUyLudJC_c4baikqRdPRGI3WH2nJ6ys1g"
 ADMIN_IDS = [7886987683, 5116530698]
 USER_LIST = set()
 
